@@ -89,6 +89,7 @@ def contacts(id = None):
 
         return jsonify(contact.serialize()), 201 # 201 objeto creado en la bd
 
+
     if request.method == "PUT":
         name = request.json.get("name", None)
         phone = request.json.get("phone", None) #valor por defecto en none
@@ -98,17 +99,17 @@ def contacts(id = None):
         if not phone and phone == "":
             return jsonify({"msg": "Field phone is required"}), 400  # 400 o 422
 
-    contact = Contact.query.get(id) #busca por el id
+        contact = Contact.query.get(id) #busca por el id
     
-    if not contact:
-        return jsonify({"msg": "Not Found"}), 404 # para no actualizar algo q no existe
+        if not contact:
+            return jsonify({"msg": "Not Found"}), 404 # para no actualizar algo q no existe
 
-    contact.name = name
-    contact.phone = phone
+        contact.name = name
+        contact.phone = phone
 
-    db.session.commit() # para actualizar y guardar en la bd
+        db.session.commit() # para actualizar y guardar en la bd
 
-    return jsonify(contact.serialize()), 200
+        return jsonify(contact.serialize()), 200
 
 
     if request.method == "DELETE":
