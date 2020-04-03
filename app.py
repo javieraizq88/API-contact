@@ -55,9 +55,9 @@ def test2(id, cat_id):
 @app.route("/api/contacts/<int:id>", methods=["GET", "PUT", "DELETE"]) # parametros q tengo q decir q elementos quiero obtener, actualizar o eliminar
 def contacts(id = None):
     if request.method == "GET": #valida si viene o no con parametro
-        if id is not None: 
-            contact = Contact.query.get(id) # saco el contacto segun el id
-            if contact:
+        if id is not None:
+            contacts = Contact.query.get(id) # saco el contacto segun el id
+            if contacts:
                 return jsonify(contacts.serialize()), 200
             else:
                 return jsonify({"msg": "Not Found"}), 404
@@ -69,7 +69,7 @@ def contacts(id = None):
 
     if request.method == "POST":
         name = request.json.get("name", None)
-        phone = request.json.get("phone", None) #valor por defecto en none
+        phone = request.json.get("phone", None) # valor por defecto en none
 
         if not name and name == "":
             return jsonify({"msg": "Field name is required"}), 400  # 400 o 422
@@ -80,17 +80,37 @@ def contacts(id = None):
     # contact = Contact(name=name, phone=phone)
     
     # opcion 2:
-    contact = Contact()
+        contact = Contact()
+        contact.name = name
+        contact.phone = phone
+
+        db.session.add(contact) # pa q agregue el contacto en la BD
+        db.session.commit() #para guardar en la bd
+
+        return jsonify(contact.serialize()), 201 # 201 objeto creado en la bd
+
+    if request.method == "PUT":
+        name = request.json.get("name", None)
+        phone = request.json.get("phone", None) #valor por defecto en none
+
+        if not name and name == "":
+            return jsonify({"msg": "Field name is required"}), 400  # 400 o 422
+        if not phone and phone == "":
+            return jsonify({"msg": "Field phone is required"}), 400  # 400 o 422
+
+    contact = Contact.query.get(id) #busca por el id
+    
+    if not contact:
+        return jsonify({"msg": "Not Found"}), 404 # para no actualizar algo q no existe
+
     contact.name = name
     contact.phone = phone
 
-    db.session.add(contact) # pa q agregue el contacto en la BD
-    db.session.commit() #para guardar en la bd
+    db.session.commit() # para actualizar y guardar en la bd
 
-    return jsonify(contact.serialize()), 201 # 201 objeto creado en la bd
+    return jsonify(contact.serialize()), 200
 
-    if request.method == "PUT":
-        pass
+
     if request.method == "DELETE":
         pass
 
