@@ -68,7 +68,27 @@ def contacts(id = None):
             return jsonify(contacts), 200
 
     if request.method == "POST":
-        pass
+        name = request.json.get("name", None)
+        phone = request.json.get("phone", None) #valor por defecto en none
+
+        if not name and name == "":
+            return jsonify({"msg": "Field name is required"}), 400  # 400 o 422
+        if not phone and phone == "":
+            return jsonify({"msg": "Field phone is required"}), 400  # 400 o 422
+
+    # opcion 1: para pasarle los parametros al constructor
+    # contact = Contact(name=name, phone=phone)
+    
+    # opcion 2:
+    contact = Contact()
+    contact.name = name
+    contact.phone = phone
+
+    db.session.add(contact) # pa q agregue el contacto en la BD
+    db.session.commit() #para guardar en la bd
+
+    return jsonify(contact.serialize()), 201 # 201 objeto creado en la bd
+
     if request.method == "PUT":
         pass
     if request.method == "DELETE":
