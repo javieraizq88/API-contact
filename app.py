@@ -144,5 +144,6 @@ def contact_new():
 
         return jsonify(contact.serialize()), 201 # 201 objeto creado en la bd
 
+
 if __name__ == '__main__':
     manager.run()
