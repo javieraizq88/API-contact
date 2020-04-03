@@ -113,7 +113,36 @@ def contacts(id = None):
 
 
     if request.method == "DELETE":
-        pass
+        contact = Contact.query.get(id) # busca por el id
+        if not contact:
+            return jsonify({"msg": "Not Found"}), 404 # para no eliminar algo q no existe
+        # opcion 1 para eliminar :
+        # contact.delete()
+
+        # opcion 2 para eliminar:
+        db.session.delete(contact)
+        db.session.commit()
+        return jsonify({"msg": "Contact was deleted"}), 200
+
+@app.route("/api/contact/new", methods=["POST"]) # otra forma para crear contactos
+def contact_new():
+    if request.method == "POST":
+        name = request.json.get("name", None)
+        phone = request.json.get("phone", None) # valor por defecto en none
+
+        if not name and name == "":
+            return jsonify({"msg": "Field name is required"}), 400  # 400 o 422
+        if not phone and phone == "":
+            return jsonify({"msg": "Field phone is required"}), 400  # 400 o 422
+
+        contact = Contact()
+        contact.name = name
+        contact.phone = phone
+
+        db.session.add(contact) # pa q agregue el contacto en la BD
+        db.session.commit() #para guardar en la bd
+
+        return jsonify(contact.serialize()), 201 # 201 objeto creado en la bd
 
 if __name__ == '__main__':
     manager.run()
