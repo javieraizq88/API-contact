@@ -12,7 +12,8 @@ API REACT FLASK
 
 3.1) en terminal
 
-    $$$$ pipenv install flask
+    $$$$ pipenv install
+    $ pipenv install flask
     $ pipenv install flask-script
     $ pipenv install flask-cors
     $ pipenv install flask-migrate

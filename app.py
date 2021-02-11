@@ -76,10 +76,10 @@ def contacts(id = None):
         if not phone and phone == "":
             return jsonify({"msg": "Field phone is required"}), 400  # 400 o 422
 
-    # opcion 1: para pasarle los parametros al constructor
-    # contact = Contact(name=name, phone=phone)
+        # opcion 1: para pasarle los parametros al constructor
+        # contact = Contact(name=name, phone=phone)
     
-    # opcion 2:
+        # opcion 2:
         contact = Contact()
         contact.name = name
         contact.phone = phone
